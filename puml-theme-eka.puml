@@ -28,7 +28,7 @@ skinparam BoxPadding 20
 
 !$zone = ""
 !procedure $zone_add($name)
-!$zone = $zone + "participant" + $name + %newline()
+$zone = $zone + "participant" + $name + %newline()
 !endprocedure
 
 !procedure $service($name, $service, $host="self")
