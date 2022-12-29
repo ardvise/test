@@ -303,25 +303,4 @@ skinparam sequence {
 }
 !endsub
 
-
-
-<style>
-style mindmapDiagram {
-  'Padding 8
-  Margin 8
-  LineThickness 2.0
-  FontColor $PRIMARY_TEXT
-  LineColor $SECONDARY
-  BackGroundColor $PRIMARY_LIGHT-$PRIMARY
-}
-wbsDiagram {
-  'Padding 8
-  Margin 8
-  LineThickness 2.0
-  FontColor $PRIMARY_TEXT
-  LineColor $PRIMARY
-  BackGroundColor $PRIMARY_LIGHT-$PRIMARY
-}
-</style>
-!endsub
 !endif
