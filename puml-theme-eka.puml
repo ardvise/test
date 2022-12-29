@@ -33,7 +33,7 @@ skinparam BoxPadding 20
 
 !procedure $service($name, $service, $host="self")
 $zone_add($name)
-participant os  [
+participant $name [
 ===$host
 ----
 ""$service""
