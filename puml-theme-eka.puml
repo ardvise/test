@@ -26,22 +26,3 @@ hide footbox
 
 skinparam BoxPadding 20
 
-!$zone = ""
-!procedure $zone_add($name)
-$zone = $zone + "participant" + $name + %newline()
-!endprocedure
-
-!procedure $service($name, $service, $host="self")
-$zone_add($name)
-participant $name [
-===$host
-----
-""$service""
-]
-!endprocedure
-
-!procedure $zone_show($name)
-box "eKassir" #Red
-## $zone ##
-end box
-!endprocedure
