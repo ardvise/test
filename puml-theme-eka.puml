@@ -10,7 +10,7 @@ skinparam backgroundColor $BGCOLOR
 skinparam useBetaStyle false
 
 skinparam sequenceArrowThickness 1
-skinparam roundcorner 20
+skinparam roundcorner 15
 
 
 skinparam ParticipantPadding 20
@@ -26,3 +26,78 @@ hide footbox
 
 skinparam BoxPadding 20
 
+
+!$zone_ = ""
+!$zone_part = "participant "
+!$zone_actor = "actor "
+!$zone_db = "database "
+
+!procedure $zone_add_($name, $type)
+!if ($type == "_service" )
+!$zone_ = $zone_ +$zone_part + $name + %newline()
+!elseif ($type == "_client" )
+!$zone_ = $zone_ +$zone_actor + $name + %newline()
+!elseif ($type == "_db" )
+!$zone_ = $zone_ +$zone_db + $name + %newline()
+!endif
+!endprocedure
+
+!unquoted procedure _service($name, $service, $host="self")
+$zone_add_($name, _service)
+!if ($host == "self")
+participant $name [
+""$service""
+]
+!else
+participant $name [
+===$host
+----
+""$service""
+]
+!endif
+!endprocedure
+
+!unquoted procedure _client($name, $text, $zone="self")
+!if ($zone != "self")
+$zone_add_($name, _client)
+!endif
+actor $text as $name
+!endprocedure
+
+!unquoted procedure _db($name, $text, $zone="self")
+!if ($zone != "self")
+$zone_add_($name, _db)
+!endif
+database $name as "$text"
+!endprocedure
+
+!unquoted procedure _zone($name,$type="eka")
+!if ($type == "eka")
+box $name #AliceBlue
+$zone_
+end box
+!elseif ($type == "bank")
+box $name #WhiteSmoke
+$zone_
+end box
+!elseif ($type == "out")
+box $name #STRATEGY
+$zone_
+end box
+!endif
+!$zone_ = ""
+!endprocedure
+
+!unquoted procedure _bad($text)
+else #IMPLEMENTATION $text
+!endprocedure
+
+!unquoted procedure _good($text)
+
+else #LightBlue $text
+!endprocedure
+
+!unquoted procedure _opt($text)
+
+else #LightYellow $text
+!endprocedure
