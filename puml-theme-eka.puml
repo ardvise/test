@@ -27,12 +27,11 @@ hide footbox
 skinparam BoxPadding 20
 
 
-!unquoted procedure service($service, $host="self")
+!procedure service($service, $host="self")
 participant os  [
 ===$host
 ----
 ""$service""
 ]
 !endprocedure
-
 
