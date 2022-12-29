@@ -1,196 +1,327 @@
 
-!if (%not(%variable_exists("$FONTNAME")))
-!$FONTNAME = "Verdana"
+
+!$THEME = "eka"
+
+!if %not(%variable_exists("$BGCOLOR"))
+!$BGCOLOR = "transparent"
 !endif
 
-!if (%not(%variable_exists("$FONTSIZE")))
-!$FONTSIZE = 11
-!endif
+skinparam backgroundColor $BGCOLOR
+skinparam useBetaStyle false
 
-!$ACCENT = "FF8800"
-!$ACCENTDARK = "BB6600"
-skinparam stereotypeCBackgroundColor $ACCENT
-!$PRIMARYFONTCOLOR = "000"
-!$SECONDARY = "333"
-!$ARROWCOLOR = "000"
-!$ARROWFONTCOLOR = "333"
-!$BORDERCOLOR = "aaa"
-!$BOXBG = "ccc"
-!$LIGHTBORDERCOLOR = "cccccc"
-!$LIGHTBG = "e0e0e0"
-skinparam backgroundColor fff
+''
+'' Colors taken from the css file of the BS theme
+''
+!$BLUE = "#033C73"
+!$INDIGO = "#6610F2"
+!$PURPLE = "#6F42C1"
+!$PINK = "#E83E8C"
+!$RED = "#C71C22"
+!$ORANGE = "#FD7E14"
+!$YELLOW = "#DD5600"
+!$GREEN = "#73A839"
+!$TEAL = "#20C997"
+!$CYAN = "#2FA4E7"
+!$WHITE = "#FFF"
+!$GRAY_DARK = "#343A40"
+!$GRAY = "#868E96"
+!$PRIMARY = "#2FA4E7"
+!$SECONDARY = "#E9ECEF"
+!$SUCCESS = "#73A839"
+!$INFO = "#033C73"
+!$WARNING = "#DD5600"
+!$DANGER = "#C71C22"
+!$LIGHT = "#F8F9FA"
+!$DARK = "#343A40"
 
-!procedure font_style()
-  fontColor $PRIMARYFONTCOLOR
-  fontName $FONTNAME
-  fontSize $FONTSIZE
-  stereotypeFontColor $SECONDARY
-  stereotypeFontSize $FONTSIZE
+'' *_LIGHT = tint (lighter) of the main color of 80%
+''          where TINT is calculated by clr + (255-clr) * tint_factor
+'' *_DARK = shade (darker) of the main color of 80%
+''          and SHADE is calculated by clr * (1 - shade_factor)
+''
+!$FGCOLOR = $DARK
+!$PRIMARY_LIGHT = "#59B6EC"
+!$PRIMARY_DARK = "#2683B9"
+!$PRIMARY_TEXT = $PRIMARY
+!$SECONDARY_LIGHT = "#EDF0F2"
+!$SECONDARY_DARK = "#BABDBF"
+!$SECONDARY_TEXT = $SECONDARY_DARK
+!$INFO_LIGHT = "#35638F"
+!$INFO_TEXT = $INFO
+!$SUCCESS_LIGHT = "#8FB961"
+!$SUCCESS_TEXT = $SUCCESS
+!$WARNING_LIGHT = "#E47833"
+!$WARNING_TEXT = $WARNING
+!$DANGER_LIGHT = "#D2494E"
+!$DANGER_TEXT = $WHITE
+
+!procedure $success($msg)
+  <font color=$SUCCESS><b>$msg
 !endprocedure
 
-!procedure basic_style()
-  backgroundColor $BOXBG
-  borderColor $BORDERCOLOR
+!procedure $failure($msg)
+  <font color=$DANGER><b>$msg
 !endprocedure
 
-!procedure light_style()
-  backgroundColor $LIGHTBG
-  borderColor $LIGHTBORDERCOLOR
+!procedure $warning($msg)
+  <font color=$WARNING><b>$msg
 !endprocedure
 
-!procedure accent_style()
-  backgroundColor $ACCENT
-  borderColor $ACCENTDARK
+!procedure $primary_scheme()
+	FontColor $PRIMARY_TEXT
+	BorderColor $PRIMARY
+	BackgroundColor $BGCOLOR
 !endprocedure
-
-!procedure arrow_style()
-  arrowColor $ARROWCOLOR
-  arrowFontName $FONTNAME
-  arrowFontColor $ARROWFONTCOLOR
-  arrowFontSize $FONTSIZE
-!endprocedure
-
-' Class diagrams
-
-skinparam circledCharacter {
-  radius 8
-  fontSize $FONTSIZE
-  fontName $FONTNAME
+''
+'' Style settings
+''
+<style>
+  root {
+    BackgroundColor $BGCOLOR
+    FontColor $PRIMARY_TEXT
+    HyperLinkColor $ORANGE
+    LineColor $PRIMARY_DARK
+    LineThickness 1
+    Margin 10
+    Padding 6
+    Shadowing 0.0
+  }
+  node {
+   Padding 15
+   roundcorner 20
+   BackgroundColor $BGCOLOR
+  }
+  caption {
+    LineThickness 0
+  }
+  footer {
+    LineThickness 0
+  }
+  groupHeader {
+    BackgroundColor $SECONDARY
+    FontColor $INFO
+    FontStyle bold
+  }
+  header {
+    LineThickness 0
+  }
+  referenceHeader {
+    BackgroundColor $BGCOLOR
+    FontColor $DARK
+    FontStyle bold
+  }
+  separator {
+    BackgroundColor $FGCOLOR
+    FontColor $BGCOLOR
+    FontStyle bold
+  }
+  title {
+	FontSize 20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor  $BGCOLOR
+	FontColor $PRIMARY
+	BorderColor $SECONDARY
+  }
+  nwdiagDiagram {
+	network {
+		$primary_scheme()    
+		LineColor $PRIMARY
+		LineThickness 1.0
+		FontColor $PRIMARY_DARK
+	}
+	server {
+		$primary_scheme()
+	}
+	arrow {
+		FontColor $PRIMARY_DARK
+		LineColor $PRIMARY_DARK
+	}
+	group {
+		BackGroundColor $LIGHT
+		LineColor $LIGHT_DARK
+		LineThickness 2.0
+		Margin 5
+		Padding 5
+	}
+  }
+  ganttDiagram {
+	task {
+		$primary_scheme()
+		LineColor $PRIMARY
+		Margin 10
+		Padding 6
+	}
+	note {
+		FontColor $INFO_TEXT
+		LineColor $INFO_DARK
+		BackGroundColor $BGCOLOR
+	}
+	separator {
+		LineColor $SECONDARY_DARK
+		BackGroundColor $BGCOLOR
+		FontColor $SECONDARY_TEXT
+	}
+	milestone {
+		FontColor $INFO
+		FontSize 16
+		FontStyle italic
+		BackGroundColor $SECONDARY
+		LineColor $SECONDARY_DARK
+	}
+	timeline {
+		BackgroundColor $SECONDARY
+		FontColor $SECONDARY_TEXT
+	}
+	closed {
+		BackgroundColor $WARNING_DARK
+		FontColor $WARNING_TEXT
+	}
+  }
+</style>
+''
+'' Global Default Values
+''
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             false
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               5
+skinparam ArrowColor            $GRAY
+skinparam stereotype {
+    CBackgroundColor $SECONDARY_LIGHT
+    CBorderColor $SECONDARY_DARK
+    ABackgroundColor $SUCCESS_LIGHT
+    ABorderColor $SUCCESS_DARK
+    IBackgroundColor $DANGER_LIGHT
+    IBorderColor $DANGER_DARK
+    EBackgroundColor $WARNING_LIGHT
+    EBorderColor $WARNING_DARK
+    NBackgroundColor $INFO_LIGHT
+    NBorderColor $INFO_DARK
+}
+skinparam title {
+	FontColor	                 $PRIMARY
+	BorderColor	                 $SECONDARY_DARK
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              $BGCOLOR
 }
 
-skinparam class {
-  basic_style()
-  font_style()
-  arrow_style()
-
-  attributeFontColor $SECONDARY
-  attributeFontSize $FONTSIZE
-  attributeIconSize $FONTSIZE
+skinparam legend {
+	BackgroundColor $BGCOLOR
+	BorderColor $SECONDARY_DARK
+	FontColor $DARK
 }
 
-' Sequence diagrams
-
-skinparam actor {
-  accent_style()
-  font_style()
+!startsub swimlane
+skinparam swimlane {
+	BorderColor $INFO
+	BorderThickness 2
+	TitleBackgroundColor  $SECONDARY_LIGHT-$SECONDARY
+	TitleFontColor $PRIMARY
 }
+!endsub
 
-skinparam participant {
-  basic_style()
-  font_style()
-}
-
-skinparam collections {
-  basic_style()
-  font_style()
-}
-
-skinparam SequenceBox{
-  light_style()
-  font_style()
-}
-
-' Component diagrams
-
-skinparam interface {
-  accent_style()
-  font_style()
-}
-
-skinparam component {
-  basic_style()
-  font_style()
-}
-
-skinparam node {
-  basic_style()
-  font_style()
-}
-
-skinparam database {
-  basic_style()
-  font_style()
-}
-
-skinparam queue {
-  basic_style()
-  font_style()
-}
-
-' Use Case diagrams
-
-skinparam usecase {
-  basic_style()
-  font_style()
-  arrow_style()
-}
+!startsub activity
 
 skinparam activity {
-  basic_style()
-  font_style()
-  arrow_style()
+	$primary_scheme()
+	BarColor $SUCCESS
+	StartColor $INFO
+	EndColor $INFO
+	''
+	DiamondBackgroundColor $BGCOLOR
+  	DiamondBorderColor $SECONDARY_DARK
+	DiamondFontColor $SECONDARY_TEXT
 }
+!endsub
+
+!startsub participant
+
+skinparam participant {
+	$primary_scheme()
+	ParticipantBorderThickness 2
+}
+!endsub
+
+!startsub actor
+
+skinparam actor {
+	$primary_scheme()
+}
+!endsub
+
+!startsub arrow
+
+skinparam arrow {
+	Thickness 3
+	Color $PRIMARY
+	FontColor $FGCOLOR
+}
+!endsub
+
+!startsub sequence
 
 skinparam sequence {
-  font_style()
-  arrow_style()
-
-  lifeLineBorderColor $ACCENT
-  lifeLineBackgroundColor $LIGHTBG
+	BorderColor $PRIMARY
+	' For some reason sequence title font color does not pick up from global
+	TitleFontColor $PRIMARY
+	BackgroundColor $BGCOLOR
+	StartColor $PRIMARY
+	EndColor $PRIMARY
+	''
+	BoxBackgroundColor $BGCOLOR
+	BoxBorderColor $GRAY
+	BoxFontColor $DARK
+	''
+	DelayFontColor $DARK
+	''
+	LifeLineBorderColor $SECONDARY_DARK
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor $BGCOLOR
+	''
+	GroupBorderColor $GRAY
+	GroupFontColor $DARK
+	GroupHeaderFontColor $INFO_TEXT
+	''
+	DividerBackgroundColor $LIGHT
+    DividerBorderColor $GRAY
+    DividerBorderThickness 2
+    DividerFontColor $DARK
+	''
+	ReferenceBackgroundColor $BGCOLOR
+	ReferenceBorderColor $GRAY
+	ReferenceFontColor $DARK
+	ReferenceHeaderFontColor $INFO_TEXT
+	''
+	StereotypeFontColor $PRIMARY_TEXT
 }
+!endsub
 
-skinparam boundary {
-  accent_style()
-  font_style()
+
+
+<style>
+style mindmapDiagram {
+  'Padding 8
+  Margin 8
+  LineThickness 2.0
+  FontColor $PRIMARY_TEXT
+  LineColor $SECONDARY
+  BackGroundColor $PRIMARY_LIGHT-$PRIMARY
 }
-
-skinparam control {
-  accent_style()
-  font_style()
+wbsDiagram {
+  'Padding 8
+  Margin 8
+  LineThickness 2.0
+  FontColor $PRIMARY_TEXT
+  LineColor $PRIMARY
+  BackGroundColor $PRIMARY_LIGHT-$PRIMARY
 }
-
-skinparam entity {
-  accent_style()
-  font_style()
-}
-
-' State diagrams
-
-skinparam state {
-  basic_style()
-  font_style()
-  arrow_style()
-  startColor $ACCENT
-  endColor $ACCENTDARK
-}
-
-' Object diagrams
-
-skinparam object {
-  basic_style()
-  font_style()
-  arrow_style()
-}
-
-' Common
-
-skinparam note {
-  accent_style()
-  font_style()
-}
-
-skinparam cloud {
-  basic_style()
-  font_style()
-  arrow_style()
-}
-
-skinparam rectangle {
-  basic_style()
-  font_style()
-}
-
-skinparam storage {
-  basic_style()
-  font_style()
-}
+</style>
+!endsub
+!endif
