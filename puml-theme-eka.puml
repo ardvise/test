@@ -11,7 +11,10 @@ skinparam useBetaStyle false
 
 skinparam sequenceArrowThickness 1
 skinparam roundcorner 15
-
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       14
+skinparam dpi                   100
+skinparam shadowing             false
 
 skinparam ParticipantPadding 20
 skinparam BoxPadding 10
@@ -46,13 +49,13 @@ skinparam BoxPadding 20
 $zone_add_($name, _service)
 !if ($host == "self")
 participant $name [
-""$service""
+<b>$service
 ]
 !else
 participant $name [
-===$host
+<b>$service
 ----
-""$service""
+$host
 ]
 !endif
 !endprocedure
@@ -100,4 +103,92 @@ else #LightBlue $text
 !unquoted procedure _opt($text)
 
 else #LightYellow $text
+!endprocedure
+
+!unquoted procedure req($out, $in, $caption="", $desc="",$note="")
+!if ($caption != "")
+!$caption_ = $caption
+!else
+!$caption_ = ""
+!endif
+
+!if ($desc != "")
+!$desc_ = "\n<font size=10>" +$desc 
+!else
+!$desc_ =""
+!endif
+
+!if ($note != "")
+!$note_ = "\n<font color=gray size=10>" +$note
+!else
+!$note_ =""
+!endif
+$out -> $in : $caption_ $desc_ $note_
+
+!endprocedure
+
+!unquoted procedure resp($in, $out, $caption="", $desc="",$note="")
+!if ($caption != "")
+!$caption_ = $caption
+!else
+!$caption_ = ""
+!endif
+
+!if ($desc != "")
+!$desc_ = "\n<font size=10>" +$desc 
+!else
+!$desc_ =""
+!endif
+
+!if ($note != "")
+!$note_ = "\n<font color=gray size=10>" +$note
+!else
+!$note_ =""
+!endif
+$out --> $in : $caption_ $desc_ $note_
+
+!endprocedure
+
+!unquoted procedure q($out, $in, $caption="", $desc="",$note="")
+!if ($caption != "")
+!$caption_ = $caption
+!else
+!$caption_ = ""
+!endif
+
+!if ($desc != "")
+!$desc_ = "\n<font size=10>" +$desc 
+!else
+!$desc_ =""
+!endif
+
+!if ($note != "")
+!$note_ = "\n<font color=gray size=10>" +$note
+!else
+!$note_ =""
+!endif
+$out -> $in : $caption_ $desc_ $note_
+
+!endprocedure
+
+!unquoted procedure a($in, $out, $caption="", $desc="",$note="")
+!if ($caption != "")
+!$caption_ = $caption
+!else
+!$caption_ = ""
+!endif
+
+!if ($desc != "")
+!$desc_ = "\n<font size=10>" +$desc 
+!else
+!$desc_ =""
+!endif
+
+!if ($note != "")
+!$note_ = "\n<font color=gray size=10>" +$note
+!else
+!$note_ =""
+!endif
+$out --> $in : $caption_ $desc_ $note_
+
 !endprocedure
