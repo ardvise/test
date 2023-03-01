@@ -10,7 +10,7 @@ scale max 1024 width
 
 skinparam sequenceReferenceBackgroundColor white
 
-autonumber "<b>0.  "
+
 
 skinparam backgroundColor $BGCOLOR
 skinparam useBetaStyle false
