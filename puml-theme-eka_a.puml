@@ -7,7 +7,7 @@
 !endif
 
 scale max 1024 width
-
+autonumber "<b>0.  "
 skinparam sequenceReferenceBackgroundColor white
 
 
@@ -92,7 +92,7 @@ skinparam BoxPadding 20
 !$rule = $item
 !endif
 
-!if (%strpos($item, "s") != -1)
+!if ($begin == 2 && $item ==  "s")
 !$over = 0
 
 !endif
@@ -186,7 +186,7 @@ $in $arrow $out $rule: $caption_ $desc_ $note_ $debug_
 !endif
 
 
-!if (%strpos($item, "s") != -1)
+!if ($begin == 2 && $item ==  "s")
 !$over = 0
 
 !endif
