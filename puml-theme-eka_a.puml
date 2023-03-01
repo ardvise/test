@@ -96,11 +96,11 @@ skinparam BoxPadding 20
 
 
 
-!if (%strpos($item, "!a") != -1)
+!if ($item ==  "!a")
 !$arrow = "-->>"
 !endif
 
-!if (%strpos($item, "!d") != -1)
+!if ($item ==  "!d")
 !$arrow = "--X"
 !endif
 
