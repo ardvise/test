@@ -88,9 +88,6 @@ skinparam BoxPadding 20
 
 !endif
 
-!if (%strpos($path, "-") != -1 || %strpos($path, "+") != -1)
-!$rule = $item
-!endif
 
 !if ($begin == 2 && $item ==  "s")
 !$over = 0
@@ -181,9 +178,7 @@ $in $arrow $out $rule: $caption_ $desc_ $note_ $debug_
 
 !endif
 
-!if (%strpos($path, "-") != -1 || %strpos($path, "+") != -1)
-!$rule = $item
-!endif
+
 
 
 !if ($begin == 2 && $item ==  "s")
