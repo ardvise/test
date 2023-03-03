@@ -85,7 +85,9 @@ skinparam BoxPadding 20
 
 !if ($begin == 1)
 !$out = $item
-
+    !if ($in == $out)
+    !$over = 0
+    !endif
 !endif
 
 
@@ -175,7 +177,9 @@ $in $arrow $out $rule: $caption_ $desc_ $note_ $debug_
 
 !if ($begin == 1)
 !$out = $item
-
+    !if ($in == $out)
+    !$over = 0
+    !endif
 !endif
 
 
