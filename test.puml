@@ -1,32 +1,44 @@
+
+
 !$THEME = "eka_a"
-!$VERSION = "0.7"
+
 !if %not(%variable_exists("$BGCOLOR"))
 !$BGCOLOR = "transparent"
 !endif
+
 scale max 1024 width
 autonumber "<b>0.  "
 skinparam sequenceReferenceBackgroundColor white
+
+
+
 skinparam backgroundColor $BGCOLOR
 skinparam useBetaStyle false
+
 skinparam sequenceArrowThickness 1
 skinparam roundcorner 15
 skinparam defaultFontName       "Verdana"
 skinparam defaultFontSize       14
 skinparam dpi                   100
 skinparam shadowing             false
+
 skinparam ParticipantPadding 20
 skinparam BoxPadding 10
+
 skinparam ActorBorderColor    SaddleBrown
 skinparam SequenceReferenceBackgroundColor White
 skinparam NoteBackgroundColor White
+
 skinparam SequenceReferenceBorderColor DarkBlue
 skinparam SequenceReferenceHeaderBackgroundColor CornflowerBlue
 hide footbox
+
 skinparam BoxPadding 20
 !$bad = "#fae1e1"
 !$opt = "#FFFFE0"
 !$good = "#ADD8E6"
 !$default = "#FFFFFF90"
+
 !$zone_ = ""
 !$zone_part = "participant "
 !$avto = 1
@@ -35,61 +47,73 @@ skinparam BoxPadding 20
 !$debug = 0
 !$avtq = " --++"
 !$avta = " --++"
+
 !unquoted procedure avt($inc = 0)
 !if ($inc == 1) 
 !$avtoformatter = 1
 !endif
+
 !if ($inc == 2) 
 !$avtoformatter = 1
 !$avtq = " ++"
 !$avta = " --"
+
 !endif
+
 !endprocedure
+
 !unquoted procedure dbg()
 !$debug = 1
+
 !endprocedure
+'ARROW
 !unquoted procedure req($path, $caption="", $desc="",$note="")
+
 $arrow($avtq,"->",$path, $caption, $desc,$note)
 !endprocedure
+
 !unquoted procedure  resp($path, $caption="", $desc="",$note="")
 $arrow($avta,"-->",$path, $caption, $desc,$note)
 !endprocedure
+
 !procedure $arrow($avt = " --++" ,$arrow = "-->",$path, $caption="", $desc="",$note="")
 !$rule = ""
 !$begin = 0
 !$over = 1
+
+
 !$list = %splitstr($path," ")
+
 !foreach $item in $list
+
 !if ($begin == 0)
 !$in = $item
+
 !endif
+
 !if ($begin == 1)
 !$out = $item
-!if ($in == $out)
-!$over = 0
+    !if ($in == $out)
+    !$over = 0
+    !endif
 !endif
-!endif
+
+
 !if ($begin == 2 && $item ==  "s")
 !$over = 0
+
 !endif
+
+
+
 !if ($item ==  "!a")
-!if ($arrow == "-->")
 !$arrow = "-->>"
-!else
-!$arrow = "->>"
 !endif
-!endif
+
 !if ($item ==  "!d")
-!if ($arrow == "-->")
 !$arrow = "--X"
-!else
-!$arrow = "-X"
 !endif
-!endif
-!if ($item ==  "!b")
-!$over = 0
-!$arrow = "<-->"
-!endif
+
 !if ($begin == 2 && $item ==  "a")
 !$over = 0
 !$rule = "++"
@@ -102,243 +126,382 @@ $arrow($avta,"-->",$path, $caption, $desc,$note)
 !$over = 0
 !$rule = "--++"
 !endif
+
 !$begin = $begin +1
 !endfor
+
+
+'ТУТ caption
 !if ($caption != "")
 !$caption_ = ""
 !$list = %splitstr($caption, "|")
 !if (%size($list) >1)
-!foreach $item in $list
-!$caption_ = $caption_ + "\n"+$item
-!endfor
+    !foreach $item in $list
+    !$caption_ = $caption_ + "\n"+$item
+    !endfor
 !else
 !$caption_ = $caption
 !endif
+
+
 !else
 !$caption_ =""
 !endif
+'ТУТ desc
 !if ($desc != "")
 !$desc_ = ""
 !$list = %splitstr($desc, "|")
 !foreach $item in $list
-!$desc_ = $desc_ +"\n<font  size=12>" +$item
+!$desc_ = $desc_ +"\n<font  size=11>" +$item
 !endfor
+
 !else
 !$desc_ =""
 !endif
+'ТУТ note
+
 !if ($note != "")
 !$note_ = ""
 !$list = %splitstr($note, "|")
 !foreach $item in $list
 !$note_ = $note_ +"\n<font color=gray size=10>" +$item
 !endfor
+
 !else
 !$note_ =""
 !endif
+
 !if ($debug == 1)
-!$debug_ = "\n<font color=red size=10>"+$in +" ~"+ $arrow +" "+$out +" "+ $rule
+!$debug_ = "\n<font color=red size=10>"+ $in + $arrow +$out + $rule
 !if ($avtoformatter == 1 && $over == 1)
 !$debug_ = $debug_ + $avt +" AVT"
 !endif
 !else
 !$debug_ =""
 !endif
+'RESPONSE
 !if ($avtoformatter == 1 && $over == 1)
+
 $in $arrow $out $avt: $caption_ $desc_ $note_ $debug_ 
 !else
 $in $arrow $out $rule: $caption_ $desc_ $note_ $debug_ 
 !endif
 !endprocedure
+
+
+
+
+
 !procedure $zone_add_($name)
 !$zone_ = $zone_ +$zone_part + $name + %newline()
 !endprocedure
+
 !unquoted procedure service($name, $service, $host="self",$zone="self")
 !if ($zone == "self")
 $zone_add_($name)
 !endif
 !if ($host == "self")
-participant "<b>$mline($service,"<b>")" as $name
+participant "<b>$service" as $name
+
 !else
 participant $name [
-!$list = %splitstr($service, "|")
-!foreach $item in $list
-<b>$item
-!endfor
+<b>$service
 ----
-!$list = %splitstr($host, "|")
-!foreach $item in $list
-$item
-!endfor
+$host
 ]
+
 !endif
 !endprocedure
+
 !unquoted procedure client($name, $text, $zone="self")
 !if ($zone == "self")
 $zone_add_($name)
 !endif
-actor "$mline($text)" as $name
+actor "$text" as $name
 !endprocedure
+
 !unquoted procedure db($name, $text, $zone="self")
 !if ($zone == "self")
 $zone_add_($name)
 !endif
-database "$mline($text)" as $name
+database "$text" as $name
 !endprocedure
+
 !unquoted procedure zone($name,$type="eka")
 !if ($type == "eka")
-box $mline($name) #AliceBlue
+box $name #AliceBlue
 $zone_
 end box
 !elseif ($type == "bank")
-box $mline($name) #WhiteSmoke
+box $name #WhiteSmoke
 $zone_
 end box
 !elseif ($type == "out")
-box $mline($name) #STRATEGY
+box $name #STRATEGY
 $zone_
 end box
 !endif
 !$zone_ = ""
 !endprocedure
+
 !unquoted procedure _bad($text)
 else $bad $text
 !endprocedure
+
 !unquoted procedure _good($text)
+
 else $good $text
 !endprocedure
+
 !unquoted procedure _opt($text)
+
 else $opt $text
 !endprocedure
-!unquoted procedure else($mod1 = "",$mod2 = "")
-!if (%size($mod1) == 1)
-else $colored($mod1) $mline($mod2)
-!else
-!if (%size($mod2) == 1)
-else $colored($mod2) $mline($mod1)
-!else
-else $colored("") $mline($mod1)
+
+!unquoted procedure else($color = d ,$text)
+
+!if ($color == d)
+else $default $text
+!elseif ($color == b)
+else $bad $text
+!elseif ($color == g)
+else $good $text
+!elseif ($color == o)
+else $opt $text
 !endif
-!endif
+
 !endprocedure
-!unquoted procedure opt($mod1 = "",$mod2 = "")
-!if (%size($mod1) == 1)
-opt $colored($mod1) $mline($mod2)
-!else
-!if (%size($mod2) == 1)
-opt $colored($mod2) $mline($mod1)
-!else
-opt $colored("") $mline($mod1)
-!endif
-!endif
+
+
+!unquoted procedure opt($name)
+opt $default $name
 !endprocedure
+
 !unquoted procedure opt_o($name)
-opt $opt $mline($name)
+opt $opt $name
 !endprocedure
+
+
 !unquoted procedure opt_b($name)
-opt $bad $mline($name)
+
+opt $bad $name
+
 !endprocedure
+
 !unquoted procedure opt_g($name)
-opt $good $mline($name)
+
+opt $good $name
+
 !endprocedure
+
+'ALT
 !function $colored ($mod = "")
+
 !if ($mod == "o")
-!return $opt
+    !return $opt
 !endif
+   
 !if ($mod == "b")
-!return $bad 
+    !return $bad 
 !endif
+
 !if ($mod == "g")
-!return $good 
+    !return $good 
 !endif
+
 !if ($mod == "")
-!return $default
+    !return $default
 !endif
 !return $default
+
 !endfunction
-!function $mline ($text = "",$tag = "")
-!$list = %splitstr($text, "|")
-!if (%size($list) >1)
-!$one = 1
-!foreach $item in $list
-!if ( $one==1)
-!$text_ = $item    
-!else
-!$text_ = $text_ +"\n"+$tag+$item
-!endif
-!$one = 0
-!endfor
-!return $text_
-!else
-!return $text
-!endif
-!endfunction
+
 !unquoted procedure alt($mod1 = "",$mod2 = "")
+
 !if (%size($mod1) == 1)
 alt $colored($mod1) $mod2
 !else
-!if (%size($mod2) == 1)
-alt $colored($mod2) $mod1
-!else
-alt $colored("") $mod1
+    !if (%size($mod2) == 1)
+    alt $colored($mod2) $mod1
+    !else
+    alt $colored("") $mod1
+    !endif
 !endif
-!endif
+'!$bad = "#fae1e1"
+'!$opt = "#FFFFE0"
+'!$good = "#ADD8E6"
+'!$default = "#FFFFFF90"    
+
 !endprocedure
-!unquoted procedure else($mod1 = "",$mod2 = "")
-!if (%size($mod1) == 1)
-else $colored($mod1) $mline($mod2)
-!else
-!if (%size($mod2) == 1)
-else $colored($mod2) $mline($mod1)
-!else
-else $colored("") $mline($mod1)
-!endif
-!endif
-!endprocedure
+
 !unquoted procedure alt_o($name)
-alt $opt $mline($name)
+alt $opt $name
 !endprocedure
+
+
 !unquoted procedure alt_b($name)
-alt $bad $mline($name)
+
+alt $bad $name
+
 !endprocedure
+
 !unquoted procedure alt_g($name)
-alt $good $mline($name)
+
+alt $good $name
+
 !endprocedure
+
+
 !unquoted procedure job($name,$text,$zone="self")
 !if ($zone == "self")
 $zone_add_($name)
 !endif
-control "<b>$mline($service,"<b>")" as $name
+control "<b>$text" as $name
 !endprocedure
+
 !unquoted procedure queue($name,$text,$zone="self")
 !if ($zone == "self")
 $zone_add_($name)
 !endif
-queue "<b>$mline($service,"<b>")" as $name
+queue "<b>$text" as $name
 !endprocedure
+
 !unquoted procedure job_f($name)
 |||
 hnote over $name: <b>Finished Job 
 !endprocedure
+
 !unquoted procedure job_r($name)
 |||
 hnote over $name: <b>Repeat Job
+
 !endprocedure
+
 !unquoted procedure job_s($name)
 |||
 hnote over $name: <b>Started Job
 !endprocedure
+
 !unquoted procedure ref($name, $text)
 !$test = ""
 !$det = " ,"
 !$begin = 1
 !$list = %splitstr($name," ")
 !foreach $item in $list
-!if ($begin == 1)
-!$test = $test + $item
-!$begin = 0
-!else
-!$test = $test + $det + $item 
-!endif
+ !if ($begin == 1)
+ !$test = $test + $item
+ !$begin = 0
+ !else
+  !$test = $test + $det + $item 
+ !endif
+ 
 !endfor
-ref over $test : <b>$mline($text,"<b>")
+
+ref over $test : <b>$text
 !endprocedure
+
+
+
+
+
+
+avt(2)
+dbg()
+db(aaaa,"aaa\n2222dd")
+actor "asaasasasassasasasassasaa\nasasasassasas" as aaa
+job(job2,"DecisionNotification\nasd")
+job(job3,"CreateOperation")
+service(kernel,"Ядро OHub\nasdd","LOOl")
+service(gw,"B2C Gateway")
+zone("EKassir Adapter SBP",eka)
+
+service(opkc,"ОПКЦ СБП")
+zone("IPS",out)
+
+activate job2
+ref(opkc job2,"Запрос в Банк Плательщика на возврат по Операции")
+job_s(job2)
+
+
+
+opt(Payload["c"] == "RS07999")
+req(job2 opkc,"Уведомление о результате обработки запроса на возврат\nот Банка Плательщика", PATCH /payment/v1/agent/refund/{trxId}/{opkcRefundRequestId})
+
+opt("Status Code == 200/400 (code:RQ05047)")
+resp(opkc job2 , "HTTP-code 400/200 (code:RQ05047)","PaymentProcessStateResult","123|222")
+
+req(job2 opkc,"Уведомление о результате обработки запроса на возврат\nот Банка Плательщика", PATCH /payment/v1/agent/refund/{trxId}/{opkcRefundRequestId})
+resp(opkc job2 , "HTTP-code 400/200 (code:RQ05047)","PaymentProcessStateResult","123|222")
+resp(gw kernel, "Результат запроса", "PaymentProcessStateResult")
+resp(gw kernel, "Результат запроса")
+
+job_f(job2)
+end
+
+job_r(job2)
+end
+alt(b,"Таймаут1")
+|||
+end
+
+alt("Таймаут2",g)
+|||
+end
+
+alt("Таймаут3")
+|||
+end
+
+alt(o)
+|||
+end
+
+req(job2 kernel,"Запрос о возможности возврата", WCF: StartMultistate, (skip_return_request = true))
+req(kernel gw, "Запрос о возможности возврата", "PaymentProcessState") 
+resp(gw kernel, "Результат запроса", "PaymentProcessStateResult")
+
+
+alt(b,"Таймаут1")
+job_r(job2)
+
+_bad("Ошибка при выполнении InternalPaymentProcessState")
+resp(kernel job2 s, "Результат запроса", "StartMultistateResponse,(ResultCode = 0/1)") 
+req(job2 opkc,"Уведомление о результате обработки запроса на возврат\nот Банка Плательщика", PATCH /payment/v1/agent/refund/{trxId}/{opkcRefundRequestId})
+
+opt("Status Code == 200/400 (code:RQ05047)")
+resp(opkc job2,"Ответ", "Status Code")
+job_f(job2)
+end
+
+job_r(job2)
+
+_good("Возврат разрешен")
+resp(kernel job2, "Результат запроса", StartMultistateResponse,(ResultCode = 2, Session))
+req(job2 opkc,"Уведомление о результате обработки запроса на возврат\nот Банка Плательщика", PATCH /payment/v1/agent/refund/{trxId}/{opkcRefundRequestId})
+
+alt(o,"стекло время ожидания решения Банка Плательщика")
+resp(opkc job2 s, "HTTP-code 400 (code:RQ05047)")
+job_f(job2)
+end
+
+resp(opkc job2, HTTP-code 200)
+req(job2 job3, "Start CreateOperation job")
+job_s(job3)
+
+opt("Error, TimeOut")
+resp(job3 job2 s, Error)
+job_r(job2)
+end
+
+resp(job3 job2, OK (Job Id))
+job_f(job2)
+end 
+
+deactivate job2
+
+ref(opkc gw, "CreateOperation job")
+
+@enduml
+
+
+
