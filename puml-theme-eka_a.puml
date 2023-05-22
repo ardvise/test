@@ -307,13 +307,13 @@ alt $good $mline($name)
 !if ($zone == "self")
 $zone_add_($name)
 !endif
-control "<b>$mline($service,"<b>")" as $name
+control "<b>$mline($text,"<b>")" as $name
 !endprocedure
 !unquoted procedure queue($name,$text,$zone="self")
 !if ($zone == "self")
 $zone_add_($name)
 !endif
-queue "<b>$mline($service,"<b>")" as $name
+queue "<b>$mline($text,"<b>")" as $name
 !endprocedure
 !unquoted procedure job_f($name)
 |||
