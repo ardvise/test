@@ -327,18 +327,37 @@ hnote over $name: <b>Repeat Job
 |||
 hnote over $name: <b>Started Job
 !endprocedure
-!unquoted procedure ref($name, $text)
+!unquoted procedure ref($name, $text,$mode="l")
 !$test = ""
 !$det = " ,"
 !$begin = 1
 !$list = %splitstr($name," ")
 !foreach $item in $list
-!if ($begin == 1)
-!$test = $test + $item
-!$begin = 0
-!else
-!$test = $test + $det + $item 
-!endif
+ !if ($begin == 1)
+ !$test = $test + $item
+ !$begin = 0
+ !else
+  !$test = $test + $det + $item 
+ !endif
 !endfor
-ref over $test : <b>$mline($text,"<b>")
+!if ($mode == "l")
+ref over $test  : <font color=black size=14><b>$mline($text,"<font color=black size=14><b>") 
+!elseif ($mode == "m")
+<style>
+reference {
+  FontColor gray
+  FontSize 10
+  HorizontalAlignment left
+
+}
+</style>
+ref over $test 
+!$list = %splitstr($text, "|")
+!foreach $item in $list
+<font color=black size=14><b>$item
+!endfor
+----
+!else
+ref over $test: <font color=red size=14><b>Указан неизвестный мод: $mode
+!endif
 !endprocedure
