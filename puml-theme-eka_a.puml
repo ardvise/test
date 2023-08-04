@@ -130,7 +130,7 @@ $arrow($avta,"-->",$path, $caption, $desc,$note)
 !$note_ = ""
 !$list = %splitstr($note, "|")
 !foreach $item in $list
-!$note_ = $note_ +"\n<font color=gray size=10>" +$item
+!$note_ = $note_ +"\n<font color=gray size=12><b>" +$item
 !endfor
 !else
 !$note_ =""
