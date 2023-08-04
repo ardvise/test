@@ -1,194 +1,363 @@
-
-
 !$THEME = "eka"
-
+!$VERSION = "0.8"
 !if %not(%variable_exists("$BGCOLOR"))
 !$BGCOLOR = "transparent"
 !endif
-
+scale max 1024 width
+autonumber "0.  "
+skinparam sequenceReferenceBackgroundColor white
 skinparam backgroundColor $BGCOLOR
 skinparam useBetaStyle false
-
 skinparam sequenceArrowThickness 1
 skinparam roundcorner 15
 skinparam defaultFontName       "Verdana"
 skinparam defaultFontSize       14
 skinparam dpi                   100
 skinparam shadowing             false
-
 skinparam ParticipantPadding 20
 skinparam BoxPadding 10
-
 skinparam ActorBorderColor    SaddleBrown
 skinparam SequenceReferenceBackgroundColor White
 skinparam NoteBackgroundColor White
-
 skinparam SequenceReferenceBorderColor DarkBlue
 skinparam SequenceReferenceHeaderBackgroundColor CornflowerBlue
 hide footbox
-
 skinparam BoxPadding 20
-
-
+!$bad = "#fae1e1"
+!$opt = "#FFFFE0"
+!$good = "#ADD8E6"
+!$default = "#FFFFFF90"
 !$zone_ = ""
 !$zone_part = "participant "
-!$zone_actor = "actor "
-!$zone_db = "database "
-
-!procedure $zone_add_($name, $type)
-!if ($type == "_service" )
-!$zone_ = $zone_ +$zone_part + $name + %newline()
-!elseif ($type == "_client" )
-!$zone_ = $zone_ +$zone_actor + $name + %newline()
-!elseif ($type == "_db" )
-!$zone_ = $zone_ +$zone_db + $name + %newline()
+!$avto = 1
+!$balance = 0
+!$avtoformatter = 0
+!$debug = 0
+!$avtq = " --++"
+!$avta = " --++"
+!unquoted procedure avt($inc = 0)
+!if ($inc == 1) 
+!$avtoformatter = 1
+!endif
+!if ($inc == 2) 
+!$avtoformatter = 1
+!$avtq = " ++"
+!$avta = " --"
 !endif
 !endprocedure
-
-!unquoted procedure _service($name, $service, $host="self")
-$zone_add_($name, _service)
+!unquoted procedure dbg()
+!$debug = 1
+!endprocedure
+!unquoted procedure req($path, $caption="", $desc="",$note="")
+$arrow($avtq,"->",$path, $caption, $desc,$note)
+!endprocedure
+!unquoted procedure  resp($path, $caption="", $desc="",$note="")
+$arrow($avta,"-->",$path, $caption, $desc,$note)
+!endprocedure
+!procedure $arrow($avt = " --++" ,$arrow = "-->",$path, $caption="", $desc="",$note="")
+!$rule = ""
+!$begin = 0
+!$over = 1
+!$list = %splitstr($path," ")
+!foreach $item in $list
+!if ($begin == 0)
+!$in = $item
+!endif
+!if ($begin == 1)
+!$out = $item
+!if ($in == $out)
+!$over = 0
+!endif
+!endif
+!if ($begin == 2 && $item ==  "s")
+!$over = 0
+!endif
+!if ($item ==  "!a")
+!if ($arrow == "-->")
+!$arrow = "-->>"
+!else
+!$arrow = "->>"
+!endif
+!endif
+!if ($item ==  "!d")
+!if ($arrow == "-->")
+!$arrow = "--X"
+!else
+!$arrow = "-X"
+!endif
+!endif
+!if ($item ==  "!b")
+!$over = 0
+!$arrow = "<-->"
+!endif
+!if ($begin == 2 && $item ==  "a")
+!$over = 0
+!$rule = "++"
+!endif
+!if ($begin == 2 && $item ==  "d")
+!$over = 0
+!$rule = "--"
+!endif
+!if ($begin == 2 && $item =="ad")
+!$over = 0
+!$rule = "--++"
+!endif
+!$begin = $begin +1
+!endfor
+!if ($caption != "")
+!$caption_ = ""
+!$list = %splitstr($caption, "|")
+!if (%size($list) >1)
+!foreach $item in $list
+!$caption_ = $caption_ + "\n"+$item
+!endfor
+!else
+!$caption_ = $caption
+!endif
+!else
+!$caption_ =""
+!endif
+!if ($desc != "")
+!$desc_ = ""
+!$list = %splitstr($desc, "|")
+!foreach $item in $list
+!$desc_ = $desc_ +"\n<font  size=12>" +$item
+!endfor
+!else
+!$desc_ =""
+!endif
+!if ($note != "")
+!$note_ = ""
+!$list = %splitstr($note, "|")
+!foreach $item in $list
+!$note_ = $note_ +"\n<font color=gray size=12>" +$item
+!endfor
+!else
+!$note_ =""
+!endif
+!if ($debug == 1)
+!$debug_ = "\n<font color=red size=10>"+$in +" ~"+ $arrow +" "+$out +" "+ $rule
+!if ($avtoformatter == 1 && $over == 1)
+!$debug_ = $debug_ + $avt +" AVT"
+!endif
+!else
+!$debug_ =""
+!endif
+!if ($avtoformatter == 1 && $over == 1)
+$in $arrow $out $avt: $caption_ $desc_ $note_ $debug_ 
+!else
+$in $arrow $out $rule: $caption_ $desc_ $note_ $debug_ 
+!endif
+!endprocedure
+!procedure $zone_add_($name)
+!$zone_ = $zone_ +$zone_part + $name + %newline()
+!endprocedure
+!unquoted procedure service($name, $service, $host="self",$zone="self")
+!if ($zone == "self")
+$zone_add_($name)
+!endif
 !if ($host == "self")
-participant $name [
-<b>$service
-]
+participant "$mline($service,"")" as $name
 !else
 participant $name [
-<b>$service
+!$list = %splitstr($service, "|")
+!foreach $item in $list
+$item
+!endfor
 ----
-$host
+!$list = %splitstr($host, "|")
+!foreach $item in $list
+$item
+!endfor
 ]
 !endif
 !endprocedure
-
-!unquoted procedure _client($name, $text, $zone="self")
-!if ($zone != "self")
-$zone_add_($name, _client)
+!unquoted procedure client($name, $text, $zone="self")
+!if ($zone == "self")
+$zone_add_($name)
 !endif
-actor $text as $name
+actor "$mline($text)" as $name
 !endprocedure
-
-!unquoted procedure _db($name, $text, $zone="self")
-!if ($zone != "self")
-$zone_add_($name, _db)
+!unquoted procedure db($name, $text, $zone="self")
+!if ($zone == "self")
+$zone_add_($name)
 !endif
-database $name as "$text"
+database "$mline($text)" as $name
 !endprocedure
-
-!unquoted procedure _zone($name,$type="eka")
+!unquoted procedure zone($name,$type="eka")
 !if ($type == "eka")
-box $name #AliceBlue
+box $mline($name) #AliceBlue
 $zone_
 end box
 !elseif ($type == "bank")
-box $name #WhiteSmoke
+box $mline($name) #WhiteSmoke
 $zone_
 end box
 !elseif ($type == "out")
-box $name #STRATEGY
+box $mline($name) #STRATEGY
 $zone_
 end box
 !endif
 !$zone_ = ""
 !endprocedure
-
 !unquoted procedure _bad($text)
-else #IMPLEMENTATION $text
+else $bad $text
 !endprocedure
-
 !unquoted procedure _good($text)
-
-else #LightBlue $text
+else $good $text
 !endprocedure
-
 !unquoted procedure _opt($text)
-
-else #LightYellow $text
+else $opt $text
 !endprocedure
-
-!unquoted procedure req($out, $in, $caption="", $desc="",$note="")
-!if ($caption != "")
-!$caption_ = $caption
+!unquoted procedure else($mod1 = "",$mod2 = "")
+!if (%size($mod1) == 1)
+else $colored($mod1) $mline($mod2)
 !else
-!$caption_ = ""
-!endif
-
-!if ($desc != "")
-!$desc_ = "\n<font size=10>" +$desc 
+!if (%size($mod2) == 1)
+else $colored($mod2) $mline($mod1)
 !else
-!$desc_ =""
+else $colored("") $mline($mod1)
 !endif
-
-!if ($note != "")
-!$note_ = "\n<font color=gray size=10>" +$note
-!else
-!$note_ =""
 !endif
-$out -> $in : $caption_ $desc_ $note_
-
 !endprocedure
-
-!unquoted procedure resp($in, $out, $caption="", $desc="",$note="")
-!if ($caption != "")
-!$caption_ = $caption
+!unquoted procedure opt($mod1 = "",$mod2 = "")
+!if (%size($mod1) == 1)
+opt $colored($mod1) $mline($mod2)
 !else
-!$caption_ = ""
-!endif
-
-!if ($desc != "")
-!$desc_ = "\n<font size=10>" +$desc 
+!if (%size($mod2) == 1)
+opt $colored($mod2) $mline($mod1)
 !else
-!$desc_ =""
+opt $colored("") $mline($mod1)
 !endif
-
-!if ($note != "")
-!$note_ = "\n<font color=gray size=10>" +$note
-!else
-!$note_ =""
 !endif
-$out --> $in : $caption_ $desc_ $note_
-
 !endprocedure
-
-!unquoted procedure q($out, $in, $caption="", $desc="",$note="")
-!if ($caption != "")
-!$caption_ = $caption
-!else
-!$caption_ = ""
-!endif
-
-!if ($desc != "")
-!$desc_ = "\n<font size=10>" +$desc 
-!else
-!$desc_ =""
-!endif
-
-!if ($note != "")
-!$note_ = "\n<font color=gray size=10>" +$note
-!else
-!$note_ =""
-!endif
-$out -> $in : $caption_ $desc_ $note_
-
+!unquoted procedure opt_o($name)
+opt $opt $mline($name)
 !endprocedure
-
-!unquoted procedure a($in, $out, $caption="", $desc="",$note="")
-!if ($caption != "")
-!$caption_ = $caption
-!else
-!$caption_ = ""
+!unquoted procedure opt_b($name)
+opt $bad $mline($name)
+!endprocedure
+!unquoted procedure opt_g($name)
+opt $good $mline($name)
+!endprocedure
+!function $colored ($mod = "")
+!if ($mod == "o")
+!return $opt
 !endif
-
-!if ($desc != "")
-!$desc_ = "\n<font size=10>" +$desc 
-!else
-!$desc_ =""
+!if ($mod == "b")
+!return $bad 
 !endif
-
-!if ($note != "")
-!$note_ = "\n<font color=gray size=10>" +$note
-!else
-!$note_ =""
+!if ($mod == "g")
+!return $good 
 !endif
-$out --> $in : $caption_ $desc_ $note_
+!if ($mod == "")
+!return $default
+!endif
+!return $default
+!endfunction
+!function $mline ($text = "",$tag = "")
+!$list = %splitstr($text, "|")
+!if (%size($list) >1)
+!$one = 1
+!foreach $item in $list
+!if ( $one==1)
+!$text_ = $item    
+!else
+!$text_ = $text_ +"\n"+$tag+$item
+!endif
+!$one = 0
+!endfor
+!return $text_
+!else
+!return $text
+!endif
+!endfunction
+!unquoted procedure alt($mod1 = "",$mod2 = "")
+!if (%size($mod1) == 1)
+alt $colored($mod1) $mline($mod2)
+!else
+!if (%size($mod2) == 1)
+alt $colored($mod2) $mline($mod1)
+!else
+alt $colored("") $mline($mod1)
+!endif
+!endif
+!endprocedure
+!unquoted procedure else($mod1 = "",$mod2 = "")
+!if (%size($mod1) == 1)
+else $colored($mod1) $mline($mod2)
+!else
+!if (%size($mod2) == 1)
+else $colored($mod2) $mline($mod1)
+!else
+else $colored("") $mline($mod1)
+!endif
+!endif
+!endprocedure
+!unquoted procedure alt_o($name)
+alt $opt $mline($name)
+!endprocedure
+!unquoted procedure alt_b($name)
+alt $bad $mline($name)
+!endprocedure
+!unquoted procedure alt_g($name)
+alt $good $mline($name)
+!endprocedure
+!unquoted procedure job($name,$text,$zone="self")
+!if ($zone == "self")
+$zone_add_($name)
+!endif
+control "$mline($text,"")" as $name
+!endprocedure
+!unquoted procedure queue($name,$text,$zone="self")
+!if ($zone == "self")
+$zone_add_($name)
+!endif
+queue "$mline($text,"")" as $name
+!endprocedure
+!unquoted procedure job_f($name)
+|||
+hnote over $name: Finished Job 
+!endprocedure
+!unquoted procedure job_r($name)
+|||
+hnote over $name: Repeat Job
+!endprocedure
+!unquoted procedure job_s($name)
+|||
+hnote over $name: Started Job
+!endprocedure
+!unquoted procedure ref($name, $text,$mode="l")
+!$test = ""
+!$det = " ,"
+!$begin = 1
+!$list = %splitstr($name," ")
+!foreach $item in $list
+ !if ($begin == 1)
+ !$test = $test + $item
+ !$begin = 0
+ !else
+  !$test = $test + $det + $item 
+ !endif
+!endfor
+!if ($mode == "l")
+ref over $test  : <font color=black size=14>$mline($text,"<font color=black size=14>") 
+!elseif ($mode == "m")
+<style>
+reference {
+  FontColor gray
+  FontSize 10
+  HorizontalAlignment left
 
+}
+</style>
+ref over $test 
+!$list = %splitstr($text, "|")
+!foreach $item in $list
+<font color=black size=14>$item
+!endfor
+----
+!else
+ref over $test: <font color=red size=14>Указан неизвестный мод: $mode
+!endif
 !endprocedure
