@@ -274,12 +274,12 @@ opt $good $mline($name)
 !endfunction
 !unquoted procedure alt($mod1 = "",$mod2 = "")
 !if (%size($mod1) == 1)
-alt $colored($mod1) $mod2
+alt $colored($mod1) $mline($mod2)
 !else
 !if (%size($mod2) == 1)
-alt $colored($mod2) $mod1
+alt $colored($mod2) $mline($mod1)
 !else
-alt $colored("") $mod1
+alt $colored("") $mline($mod1)
 !endif
 !endif
 !endprocedure
